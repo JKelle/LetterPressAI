@@ -1,20 +1,15 @@
 import java.awt.Color;
 
 public class Tile {
-	public static Color darkRed = new Color(153, 0, 0);
-	public static Color red = new Color(255, 0, 51);
-	public static Color white = Color.white;
-	public static Color blue = new Color(0, 102, 255);
-	public static Color darkBlue = new Color(0, 0, 152);
 	
 	private Color color;
 	private char c;
 	private int[] loc;
 	
-	/*	-2 is dark red
-	 * 	-1 is red
-	 * 	0 is neutral
-	 * 	1 is blue
+	/* -2 is dark red
+	 * -1 is red
+	 *  0 is neutral
+	 *  1 is blue
 	 * 	2 is dark blue
 	 */
 	private int colorVal;
@@ -49,11 +44,11 @@ public class Tile {
 			throw new IllegalArgumentException("Invalid colorValue");
 		colorVal = v;
 		switch(v) {
-			case -2: color = darkRed; break;
-			case -1: color = red; break;
-			case  0: color = white; break;
-			case  1: color = blue; break;
-			case  2: color = darkBlue; break;
+			case -2: color = Colors.DARK_RED; break;
+			case -1: color = Colors.RED; break;
+			case  0: color = Colors.WHITE; break;
+			case  1: color = Colors.BLUE; break;
+			case  2: color = Colors.DARK_BLUE; break;
 		}
 	}
 	

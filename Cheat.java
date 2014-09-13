@@ -222,17 +222,26 @@ public class Cheat implements Runnable {
 				Tile t = b.getTile(i,j);
 				g.setColor( t.getColor() );
 				g.fill( new Rectangle(j*50+x, i*50+y, 50, 50) );
-				g.setColor(Color.BLACK);
+
+				if( t.getColor() != Color.WHITE ) {
+					g.setColor(Color.WHITE);
+				}
+				else {
+					g.setColor(Color.BLACK);
+				}
+
 				g.drawString(t.getChar()+"", j*50+18+x, (i+1)*50-18+y);
+
+				g.setColor(Color.BLACK);
 			}
 		}
 	}
 	private void drawScores(Graphics2D g) {
-		g.setColor( Tile.blue );
+		g.setColor( Colors.BLUE );
 		g.drawString(String.format("%5.2f", board.getScores()[0]), 260, 50);
 		if( !p )
 			g.drawString("Blue player's turn.", 400, 50);
-		g.setColor( Tile.red );
+		g.setColor( Colors.RED );
 		g.drawString(String.format("%5.2f", board.getScores()[1]), 260, 100);
 		if( p )
 			g.drawString("Red player's turn.", 400, 50);
