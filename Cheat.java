@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Cheat implements Runnable {
+public class Cheat {
 	private static GameBoard board;
 	private static LinkedList<Word> possibles = new LinkedList<Word>();
 	private static GameBoard[] virtualBoards;
@@ -35,7 +35,7 @@ public class Cheat implements Runnable {
 	
 	private static Rectangle submit = new Rectangle(650, 100, 115, 25);
 	private static Rectangle clear = new Rectangle(650, 160, 115, 25);
-	private static Rectangle backSpace = new Rectangle(650, 130, 115, 25);
+	private static Rectangle backspace = new Rectangle(650, 130, 115, 25);
 	private static Rectangle next = new Rectangle(300*numVBoards-25, 300, 20, 20);
 	private static Rectangle prev = new Rectangle(300*numVBoards-25, 330, 20, 20);
 	
@@ -50,7 +50,8 @@ public class Cheat implements Runnable {
 		}
 
 		Cheat ex = new Cheat();
-		new Thread(ex).start();
+		init();
+		ex.render();
 	}
 
 	private static void collectInput() {
@@ -193,9 +194,9 @@ public class Cheat implements Runnable {
 		g.drawString("Clear", clear.x+padding, clear.y+clear.height-padding);
 		
 		g.setColor(Color.darkGray);
-		g.fill(backSpace);
+		g.fill(backspace);
 		g.setColor(Color.white);
-		g.drawString("BackSpace", backSpace.x+padding, backSpace.y+backSpace.height-padding);
+		g.drawString("Backspace", backspace.x+padding, backspace.y+backspace.height-padding);
 		
 		g.setColor(Color.darkGray);
 		g.fill(next);
@@ -280,11 +281,12 @@ public class Cheat implements Runnable {
 		frame = new JFrame("LetterPress Cheat");
 
 		JPanel panel = (JPanel) frame.getContentPane();
+		panel.setBackground(Color.white);
 		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		panel.setLayout(null);
 
 		canvas = new Canvas();
-		canvas.setBounds(0, 0, WIDTH, HEIGHT);
+		canvas.setBounds(50, 50, WIDTH-50, HEIGHT-50);
 		canvas.setIgnoreRepaint(true);
 
 		panel.add(canvas);
@@ -308,6 +310,7 @@ public class Cheat implements Runnable {
 		public void mouseClicked(MouseEvent e){
 			int x = e.getX();
 			int y = e.getY();
+
 			if( x < 250 && y < 250 ) {
 				Tile t = board.getTile(y/50, x/50);
 				if( !isUsed(t) )
@@ -319,7 +322,7 @@ public class Cheat implements Runnable {
 			if( prev.contains(e.getPoint()) && startingVB >= numVBoards )
 				startingVB -= numVBoards;
 			
-			if( backSpace.contains(e.getPoint()) )
+			if( backspace.contains(e.getPoint()) )
 				if(currentWord.size() > 0)
 					currentWord.remove(currentWord.size()-1);
 			if( clear.contains(e.getPoint()) )
@@ -330,6 +333,8 @@ public class Cheat implements Runnable {
 			for(int i = 0; i < numVBoards; i++)
 				if( vBoardsLoaded && VBoardRects[i].contains(e.getPoint()) && i+startingVB < virtualBoards.length )
 					submit(virtualBoards[startingVB+i].getTileLists().get(0));
+
+			render();
 		}
 		public void mouseEntered(MouseEvent e) {}
 		public void mouseExited(MouseEvent e) {}
@@ -337,44 +342,7 @@ public class Cheat implements Runnable {
 		public void mousePressed(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e) {}
 	}
-	
-	long desiredFPS = 60;
-	long desiredDeltaLoop = (1000*1000*1000)/desiredFPS;
-	boolean running = true;
-	
-	public void run() {
-		long beginLoopTime;
-		long endLoopTime;
-		long currentUpdateTime = System.nanoTime();
-		long lastUpdateTime;
-		long deltaLoop;
-		int deltaTime;
 
-		init();
-
-		while(running)
-		{
-			beginLoopTime = System.nanoTime();
-
-			render();
-
-			lastUpdateTime = currentUpdateTime;
-			currentUpdateTime = System.nanoTime();
-			deltaTime = (int) ((currentUpdateTime - lastUpdateTime)/(1000*1000));
-			update(deltaTime);
-
-			endLoopTime = System.nanoTime();
-			deltaLoop = endLoopTime - beginLoopTime;
-
-			if(deltaLoop <= desiredDeltaLoop)
-			{
-				try
-				{
-					Thread.sleep((desiredDeltaLoop - deltaLoop)/(1000*1000));
-				} catch(InterruptedException e) { /* Do nothing */ }
-			}
-		}
-	}
 	private void render()
 	{
 		Graphics2D g = (Graphics2D)bufferStrategy.getDrawGraphics();
