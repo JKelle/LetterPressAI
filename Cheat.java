@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
+import java.awt.RenderingHints;
 import java.io.*;
 import java.util.Collections;
 import java.util.Iterator;
@@ -41,7 +42,13 @@ public class Cheat implements Runnable {
 	private static Rectangle[] VBoardRects = new Rectangle[numVBoards];
 	
 	public static void main(String[] args) {
-		collectInput();
+		if(args.length > 0 && args[0].equals("--debug")) {
+			board = new GameBoard("QWERTYUIOPLKJHGFDSANBVCXZ");
+		}
+		else {
+			collectInput();
+		}
+
 		Cheat ex = new Cheat();
 		new Thread(ex).start();
 	}
@@ -168,6 +175,7 @@ public class Cheat implements Runnable {
 	protected void update(int deltaTime){}
 	
 	protected void render(Graphics2D g) {
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		drawBoard(g, board, 0, 0);
 		drawVBoards(g);
 		
