@@ -41,13 +41,15 @@ public class Cheat implements Runnable {
 	private static Rectangle[] VBoardRects = new Rectangle[numVBoards];
 	
 	public static void main(String[] args) {
+		collectInput();
 		Cheat ex = new Cheat();
 		new Thread(ex).start();
 	}
-		
-	private static void init() {	
+
+	private static void collectInput() {
 		System.out.print("Enter the 25 letters (in order)\n> ");
 		String c25 = kb.next();
+		
 		while(c25.length() != 25) {
 			System.out.print("Wrong number of letters. Try again.\n> ");
 			c25 = kb.next();
@@ -55,24 +57,32 @@ public class Cheat implements Runnable {
 		c25 = c25.toUpperCase();
 		
 		System.out.print("New Game? (y/n)\n> ");
+		
 		if( kb.next().equals("n") ){
+			
 			System.out.print("Enter the 25 colors (b/w/g)\n> ");
 			String colors = kb.next();
 			while(colors.length() != 25) {
 				System.out.print("Wrong number of colors. Try again.\n> ");
 				colors = kb.next();
 			}
+
 			System.out.print("Whose turn is it? (b/r)\n> ");
 			String player = kb.next();
 			while( !player.equals("r") && !player.equals("b") ) {
 				System.out.print("Please enter either \"b\" or \"r\"\n> ");
 				player = kb.next();
 			}
+			
 			p = player.equals("r");
-			board = new GameBoard( c25, colors);
+			board = new GameBoard( c25, colors );
 		}
-		else
+		else {
 			board = new GameBoard( c25 );
+		}
+	}
+		
+	private static void init() {
 		
 		for(int i = 0; i < VBoardRects.length; i++)
 			VBoardRects[i] = new Rectangle(300*i, 300, 250, 250);
